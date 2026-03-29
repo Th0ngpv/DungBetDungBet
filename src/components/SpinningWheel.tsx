@@ -2,6 +2,7 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { gsap } from "gsap";
 import "./SpinningWheel.css";
+import spinSoundFile from "../assets/sounds/spin.mp3";
 
 export interface WheelRef {
   spinToNumber: (num: number) => Promise<void>;
@@ -41,6 +42,16 @@ const Wheel = forwardRef<WheelRef>((_, ref) => {
         const tl = gsap.timeline({
           onComplete: () => resolve()
         });
+
+        // --- Audio setup ---
+        const spinSound = new Audio(spinSoundFile);
+        spinSound.play(); // start sound immediately
+
+        // Optional: reduce volume
+        spinSound.volume = 0.5;
+
+        // Optional: fade out at the end of spin
+        tl.to({}, { duration: spinDuration, onComplete: () => spinSound.pause() });
 
         tl.set(layer2Ref.current, { rotate: 0 }, 0);
 
