@@ -178,7 +178,7 @@ const Game = () => {
 
       {/* Balance */}
       <h2>
-        Balance: {balance >= 1000000 ? `${balance / 1000000}tr` : `${balance / 1000}k`}
+        Tiền Vốn: {balance >= 1000000 ? `${balance / 1000000}tr` : `${balance / 1000}k`}
       </h2>
 
 

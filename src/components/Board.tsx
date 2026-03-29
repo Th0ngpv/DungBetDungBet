@@ -146,7 +146,7 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
   return (
     <div className="board-wrapper">
       <div className="bet-info">
-        <span>Total Bet: {(totalBet / 1000000).toFixed(2)}M</span>
+        <span>Tiền đã Đặt: {(totalBet / 1000000).toFixed(2)}M</span>
       </div>
       <div className="chip-selector">
         {chips.map((chip) => (
