@@ -1,18 +1,20 @@
-import { useRef } from "react";
+// src/components/Wheel.tsx
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { gsap } from "gsap";
-import Board from "./board";
-
 import "./wheel.css";
 
-const Wheel = () => {
-  const layer2Ref = useRef(null);
-  const layer4Ref = useRef(null);
-  const ballRef = useRef(null);
+export interface WheelRef {
+  spinToNumber: (num: number) => Promise<void>;
+}
+
+const Wheel = forwardRef<WheelRef>((_, ref) => {
+  const layer2Ref = useRef<HTMLDivElement>(null);
+  const layer4Ref = useRef<HTMLDivElement>(null);
+  const ballRef = useRef<HTMLDivElement>(null);
 
   const totalNumbers = 37;
   const singleRotation = 360 / totalNumbers;
 
-  // European roulette order (IMPORTANT)
   const wheelNumbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17,
     34, 6, 27, 13, 36, 11, 30, 8, 23,
@@ -20,97 +22,62 @@ const Wheel = () => {
     9, 22, 18, 29, 7, 28, 12, 35, 3, 26
   ];
 
+  const getIndex = (num: number) => wheelNumbers.indexOf(num);
+  const getRotation = (num: number) => getIndex(num) * singleRotation;
 
-const getIndexFromNumber = (num: number) => {
-  return wheelNumbers.indexOf(parseInt(num.toString()));
-};
+  useImperativeHandle(ref, () => ({
+    spinToNumber: (winningNumber: number) => {
+      return new Promise<void>((resolve) => {
+        const spinDuration = 4;
 
-const getRotationFromNumber = (num: number) => {
-  return getIndexFromNumber(num) * singleRotation;
-};
+        const rawSpins = 360 * (3 + Math.random() * 3);
+        const totalPockets = Math.round(rawSpins / singleRotation);
+        const snappedSpins = totalPockets * singleRotation;
+        const wheelEndRotation = -snappedSpins;
 
-const handleSpin = () => {
-  const spinDuration = 4;
-  const winningNumber = Math.floor(Math.random() * 37);
-  console.log(winningNumber);
-  
+        const pocketDeg = getRotation(winningNumber);
+        const ballFinal = pocketDeg + wheelEndRotation;
 
-  // Raw spins, then snap to a whole number of pockets so the wheel
-  // always stops flush on a pocket boundary — no float drift.
-  const rawSpins = 360 * (3 + Math.random() * 3);
-  const totalPockets = Math.round(rawSpins / singleRotation);
-  
-  const snappedSpins = totalPockets * singleRotation;
-  
-  
-  const wheelEndRotation = -snappedSpins;
+        const tl = gsap.timeline({
+          onComplete: () => resolve()
+        });
 
-  // The ball needs to end up over the winning pocket.
-  // The pocket's absolute position = its index × singleRotation.
-  // But the wheel has rotated under it, so we add wheelEndRotation
-  // to keep the ball pointing at the same pocket on the now-rotated wheel.
-  const pocketDeg = getRotationFromNumber(winningNumber);
-  const ballFinal = pocketDeg + wheelEndRotation;
+        tl.set(layer2Ref.current, { rotate: 0 }, 0);
 
-  const tl = gsap.timeline();
+        tl.to(layer2Ref.current, {
+          rotate: wheelEndRotation,
+          duration: spinDuration,
+          ease: "power4.out",
+        }, 0);
 
-  tl.set(layer2Ref.current, { rotate: 0 }, 0);
+        tl.to(layer4Ref.current, {
+          rotate: -wheelEndRotation * 0.6,
+          duration: spinDuration,
+          ease: "power3.out",
+        }, 0);
 
-  // Wheel
-  tl.to(layer2Ref.current, {
-    rotate: wheelEndRotation,
-    duration: spinDuration,
-    ease: "power4.out",
-  }, 0);
+        tl.set(ballRef.current, { rotate: 0 }, 0);
 
-  // Fret ring (purely decorative counter-spin — not used in ball math)
-  tl.to(layer4Ref.current, {
-    rotate: -wheelEndRotation * 0.6,
-    duration: spinDuration,
-    ease: "power3.out",
-  }, 0);
-
-  // Ball
-  tl.set(ballRef.current, { rotate: 0, y: 0 }, 0);
-  tl.to(ballRef.current, {
-    rotate: ballFinal,
-    duration: spinDuration+2,
-    ease: "power2.out",
-  }, 0);
-  
-};
+        tl.to(ballRef.current, {
+          rotate: ballFinal,
+          duration: spinDuration + 2,
+          ease: "power2.out",
+        }, 0);
+      });
+    }
+  }));
 
   return (
-    <div style={{ textAlign: "center" }}>
-      
-      <div className="roulette-wheel">
-        <div
-          ref={layer2Ref}
-          className="layer-2 wheel"
-        ></div>
-
-        <div className="layer-3"></div>
-
-        <div
-          ref={layer4Ref}
-          className="layer-4 wheel"
-        ></div>
-
-        <div className="layer-5"></div>
-
-        <div ref={ballRef} className="ball-container">
-          <div className="ball"></div>
-        </div>
+    <div className="roulette-wheel">
+      <div ref={layer2Ref} className="layer-2 wheel" />
+      <div className="layer-3" />
+      <div ref={layer4Ref} className="layer-4 wheel" />
+      <div className="layer-5" />
+      <div ref={ballRef} className="ball-container">
+        <div className="ball" />
       </div>
-
-      <Board />
-
-      {/* Spin Button */}
-      <button className="spin-btn" onClick={handleSpin}>
-        SPIN
-      </button>
     </div>
   );
-};
+});
 
 export default Wheel;

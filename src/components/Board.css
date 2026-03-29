@@ -1,0 +1,47 @@
+.board-wrapper {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* MAIN BOARD */
+.board {
+  position: relative;
+
+  width: 90%;
+  max-width: 600px;
+  aspect-ratio: 1485 / 575; /* ✅ ONLY THIS */
+
+  margin: 0 auto;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+}
+
+.zone {
+  position: absolute;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.zone:hover {
+  background: rgba(0, 255, 0, 0.25);
+}
+
+.chip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: gold;
+  color: black;
+  font-weight: bold;
+
+  border-radius: 50%;
+  padding: 6px 8px;
+  font-size: 10px;
+}

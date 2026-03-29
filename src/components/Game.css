@@ -1,0 +1,19 @@
+
+.spin-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(145deg, #ff3c3c, #b30000);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #7a0000;
+  transition: all 0.1s ease;
+}
+
+.spin-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #7a0000;
+}

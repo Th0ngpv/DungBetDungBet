@@ -1,5 +1,5 @@
 import './App.css'
-import Wheel from './components/wheel.tsx';
+import Game from './components/Game.tsx';
 
 function App() {
 
@@ -13,13 +13,8 @@ function App() {
 
     {/* main */}
     <main>
-      {/* roulette wheel */}
-      <Wheel />
-
-      
-      {/* bet table */}
-
-      {/* spin button */}
+      {/* roulette Game */}
+      <Game />
     </main>
     {/* footer */}
     <footer>
