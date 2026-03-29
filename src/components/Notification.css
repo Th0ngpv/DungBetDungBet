@@ -17,15 +17,15 @@
 
 /* Types */
 .notification.success {
-  background: #2ecc71;
+  background: var(--accent);
 }
 
 .notification.error {
-  background: #e74c3c;
+  background: var(--accent);
 }
 
 .notification.info {
-  background: #3498db;
+  background: var(--accent);
 }
 
 /* Animation */

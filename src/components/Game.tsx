@@ -12,6 +12,14 @@ type Bet = {
   amount: number;
 };
 
+type WarningInfo = {
+  message: string;
+  loss?: number;
+  win?: number;
+  winningNumber?: number;
+};
+
+
 const Game = () => {
   const wheelRef = useRef<WheelRef>(null);
 
@@ -21,32 +29,26 @@ const Game = () => {
   const [balance, setBalance] = useState(5000000);
 
   const [isSpinning, setIsSpinning] = useState(false);
-  const [lastResult, setLastResult] = useState<number | null>(null);
 
   const [notification, setNotification] = useState<{
     message: string;
     type?: "success" | "error" | "info";
   } | null>(null);
 
-  const warnings = [
-    "Gambling can be addictive. Play responsibly.",
-    "The house always has an edge — long term you will lose.",
-    "Winning streaks are temporary, losses are inevitable.",
-    "Never gamble money you cannot afford to lose.",
-    "This game is for education, not profit.",
-  ];
+  const [warningPopup, setWarningPopup] = useState<WarningInfo | null>(null);
 
-  const [warningPopup, setWarningPopup] = useState<string | null>(null);
+  const warnings = [
+  "Cờ bạc dễ gây nghiện đấy, hãy chơi vừa phải thôi nhé!",
+  "Nhà cái lúc nào cũng có lợi thế — chơi lâu dài là sẽ thua thôi.",
+  "Chuỗi thắng chỉ là tạm thời, thua là chuyện bình thường.",
+  "Đừng đánh bạc với tiền mà bạn không muốn mất nhé!",
+  "Trò này chỉ để học và vui thôi, đừng xem là cách kiếm tiền nhé."
+];
 
   const notify = (message: string, type?: "success" | "error" | "info") => {
     setNotification({ message, type });
   };
 
-  const getColor = (num: number) => {
-    if (num === 0) return "green";
-    const reds = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
-    return reds.includes(num) ? "red" : "black";
-  };
 
   const evaluateBets = (winningNumber: number, bets: Bet[]) => {
     let totalWin = 0;
@@ -104,56 +106,36 @@ const Game = () => {
 
     setIsSpinning(true);
 
-    notify("Spinning...", "info"); // 🔥 nice UX
+    notify("Spinning...", "info");
 
     const winningNumber = Math.floor(Math.random() * 37);
-
     await wheelRef.current?.spinToNumber(winningNumber);
 
-    setLastResult(winningNumber);
-
     const totalBet = bets.reduce((sum, b) => sum + b.amount, 0);
-    setBalance((prev) => {
-      const newBalance = prev - totalBet + win;
-
-      if (newBalance <= 0) {
-        setWarningPopup(
-          "You ran out of money.\n\nIn reality, players only win around 10% long-term. The house always profits."
-        );
-      }
-
-      return newBalance;
-    });
-
     const win = evaluateBets(winningNumber, bets);
-    setBalance((prev) => {
-      const newBalance = prev - totalBet + win;
 
-      if (newBalance <= 0) {
-        setWarningPopup(
-          "You ran out of money.\n\nIn reality, players only win around 10% long-term. The house always profits."
-        );
-      }
+    setBalance((prev) => prev - totalBet + win);
 
-      return newBalance;
+    // always show popup with full info
+    const randomWarning = warnings[Math.floor(Math.random() * warnings.length)];
+
+    setWarningPopup({
+      message: randomWarning,
+      loss: totalBet > win ? totalBet - win : 0,
+      win: win > 0 ? win : 0,
+      winningNumber,
     });
-
-    if (Math.random() < 0.3) {
-      const msg = warnings[Math.floor(Math.random() * warnings.length)];
-      setWarningPopup(msg);
-    }
 
     // 🎉 RESULT NOTIFICATION
     if (win > 0) {
-      notify(`You won ${(win / 1000000).toFixed(2)}M!`, "success");
+      notify(`Bạn đã thắng ${(win / 1000000).toFixed(2)}M!`, "success");
     } else {
-      notify("You lost!", "error");
+      notify("Bạn đã thua !", "error");
     }
 
-    // reset
+    // reset bets and round
     setRound((r) => r + 1);
     setBets([]);
-
     setIsSpinning(false);
   };
 
@@ -171,7 +153,10 @@ const Game = () => {
 
       {warningPopup && (
         <WarningPopup
-          message={warningPopup}
+          message={warningPopup.message}
+          loss={warningPopup.loss}
+          win={warningPopup.win}
+          winningNumber={warningPopup.winningNumber}
           onClose={() => setWarningPopup(null)}
         />
       )}
@@ -192,7 +177,7 @@ const Game = () => {
         onClick={handleSpin}
         disabled={isSpinning || bets.length === 0}
       >
-        {isSpinning ? "Spinning..." : "SPIN"}
+        {isSpinning ? "Đang quay..." : "Quay!"}
       </button>
 
       <Board
