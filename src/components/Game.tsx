@@ -5,7 +5,7 @@ import Board from "./Board";
 import Notification from "./Notification";
 import WarningPopup from "./WarningPopup";
 
-import "./Game.css";
+import "./game.css";
 
 type Bet = {
   id: string;
