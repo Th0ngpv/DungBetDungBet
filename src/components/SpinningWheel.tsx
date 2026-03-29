@@ -1,7 +1,7 @@
 // src/components/Wheel.tsx
 import { forwardRef, useImperativeHandle, useRef } from "react";
 import { gsap } from "gsap";
-import "./Wheel.css";
+import "./SpinningWheel.css";
 
 export interface WheelRef {
   spinToNumber: (num: number) => Promise<void>;

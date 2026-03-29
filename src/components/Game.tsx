@@ -1,6 +1,6 @@
 // src/components/Game.tsx
 import { useRef, useState } from "react";
-import Wheel, { type WheelRef } from "./Wheel";
+import Wheel, { type WheelRef } from "./SpinningWheel";
 import Board from "./Board";
 import Notification from "./Notification";
 import WarningPopup from "./WarningPopup";
