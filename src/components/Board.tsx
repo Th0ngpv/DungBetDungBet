@@ -150,13 +150,21 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
       </div>
       <div className="chip-selector">
         {chips.map((chip) => (
-          <img
+          <div
             key={chip.value}
-            src={chip.img}
             className={`chip-option ${selectedChip.value === chip.value ? "active" : ""
               }`}
             onClick={() => setSelectedChip(chip)}
-          />
+          >
+            <img src={chip.img} alt="" />
+            <span className="chip-label">
+              {chip.value === 1000000
+                ? "1tr"
+                : chip.value === 500000
+                  ? "500"
+                  : "200"}
+            </span>
+          </div>
         ))}
       </div>
       <div
