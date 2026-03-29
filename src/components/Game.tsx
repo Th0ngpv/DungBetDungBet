@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import Wheel, { type WheelRef } from "./Wheel";
 import Board from "./Board";
 import Notification from "./Notification";
+import WarningPopup from "./WarningPopup";
 
 import "./game.css";
 
@@ -26,6 +27,16 @@ const Game = () => {
     message: string;
     type?: "success" | "error" | "info";
   } | null>(null);
+
+  const warnings = [
+    "Gambling can be addictive. Play responsibly.",
+    "The house always has an edge — long term you will lose.",
+    "Winning streaks are temporary, losses are inevitable.",
+    "Never gamble money you cannot afford to lose.",
+    "This game is for education, not profit.",
+  ];
+
+  const [warningPopup, setWarningPopup] = useState<string | null>(null);
 
   const notify = (message: string, type?: "success" | "error" | "info") => {
     setNotification({ message, type });
@@ -102,10 +113,35 @@ const Game = () => {
     setLastResult(winningNumber);
 
     const totalBet = bets.reduce((sum, b) => sum + b.amount, 0);
-    setBalance((prev) => prev - totalBet);
+    setBalance((prev) => {
+      const newBalance = prev - totalBet + win;
+
+      if (newBalance <= 0) {
+        setWarningPopup(
+          "You ran out of money.\n\nIn reality, players only win around 10% long-term. The house always profits."
+        );
+      }
+
+      return newBalance;
+    });
 
     const win = evaluateBets(winningNumber, bets);
-    setBalance((prev) => prev + win);
+    setBalance((prev) => {
+      const newBalance = prev - totalBet + win;
+
+      if (newBalance <= 0) {
+        setWarningPopup(
+          "You ran out of money.\n\nIn reality, players only win around 10% long-term. The house always profits."
+        );
+      }
+
+      return newBalance;
+    });
+
+    if (Math.random() < 0.3) {
+      const msg = warnings[Math.floor(Math.random() * warnings.length)];
+      setWarningPopup(msg);
+    }
 
     // 🎉 RESULT NOTIFICATION
     if (win > 0) {
@@ -130,6 +166,13 @@ const Game = () => {
           message={notification.message}
           type={notification.type}
           onClose={() => setNotification(null)}
+        />
+      )}
+
+      {warningPopup && (
+        <WarningPopup
+          message={warningPopup}
+          onClose={() => setWarningPopup(null)}
         />
       )}
 
