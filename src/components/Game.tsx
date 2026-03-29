@@ -5,6 +5,9 @@ import Board from "./Board";
 import Notification from "./Notification";
 import WarningPopup from "./WarningPopup";
 
+import decoLeft from "../assets/images/deco_left.png";
+import decoRight from "../assets/images/deco_right.png";
+
 import "./Game.css";
 
 type Bet = {
@@ -38,12 +41,12 @@ const Game = () => {
   const [warningPopup, setWarningPopup] = useState<WarningInfo | null>(null);
 
   const warnings = [
-  "Cờ bạc dễ gây nghiện đấy, hãy chơi vừa phải thôi nhé!",
-  "Nhà cái lúc nào cũng có lợi thế — chơi lâu dài là sẽ thua thôi.",
-  "Chuỗi thắng chỉ là tạm thời, thua là chuyện bình thường.",
-  "Đừng đánh bạc với tiền mà bạn không muốn mất nhé!",
-  "Trò này chỉ để học và vui thôi, đừng xem là cách kiếm tiền nhé."
-];
+    "Cờ bạc dễ gây nghiện đấy, hãy chơi vừa phải thôi nhé!",
+    "Nhà cái lúc nào cũng có lợi thế — chơi lâu dài là sẽ thua thôi.",
+    "Chuỗi thắng chỉ là tạm thời, thua là chuyện bình thường.",
+    "Đừng đánh bạc với tiền mà bạn không muốn mất nhé!",
+    "Trò này chỉ để học và vui thôi, đừng xem là cách kiếm tiền nhé."
+  ];
 
   const notify = (message: string, type?: "success" | "error" | "info") => {
     setNotification({ message, type });
@@ -100,13 +103,13 @@ const Game = () => {
     if (isSpinning) return;
 
     if (bets.length === 0) {
-      notify("Place a bet first!", "error");
+      notify("Hãy Đặt cược trước!", "error");
       return;
     }
 
     setIsSpinning(true);
 
-    notify("Spinning...", "info");
+    notify("Đang quay...", "info");
 
     const winningNumber = Math.floor(Math.random() * 37);
     await wheelRef.current?.spinToNumber(winningNumber);
@@ -171,14 +174,28 @@ const Game = () => {
       {/* Wheel */}
       <Wheel ref={wheelRef} />
 
-      {/* Spin Button */}
-      <button
-        className="spin-btn"
-        onClick={handleSpin}
-        disabled={isSpinning || bets.length === 0}
-      >
-        {isSpinning ? "Đang quay..." : "Quay!"}
-      </button>
+      {/* Spin Button with Decorative Images */}
+      <div className="spin-container">
+        <img
+          src={decoLeft}
+          alt="Left decoration"
+          className="spin-decor left"
+        />
+
+        <button
+          className="spin-btn"
+          onClick={handleSpin}
+          disabled={isSpinning}
+        >
+          {isSpinning ? "Đang quay..." : "Quay!"}
+        </button>
+
+        <img
+          src={decoRight}
+          alt="Right decoration"
+          className="spin-decor right"
+        />
+      </div>
 
       <Board
         key={round}

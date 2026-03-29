@@ -6,7 +6,7 @@ import avatar from './assets/images/avatar.png';
 function App() {
 
   return (
-    <body>
+    <>
         {/* header */}
       <header>
         <img src={logo} alt="Ngừng Bet Dừng Bết Logo" />
@@ -29,7 +29,7 @@ function App() {
         >
           <img src={avatar} alt="Facebook" />
         </a>
-    </body>
+    </>
   )  
 }
 
