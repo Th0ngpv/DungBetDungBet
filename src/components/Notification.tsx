@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "./notification.css";
+import "./Notification.css";
 
 type NotificationProps = {
   message: string;

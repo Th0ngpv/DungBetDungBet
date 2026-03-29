@@ -1,4 +1,4 @@
-import "./board.css";
+import "./Board.css";
 import boardImg from "../assets/images/Board.png";
 
 import blueChip from "../assets/images/chip_blue.png";
