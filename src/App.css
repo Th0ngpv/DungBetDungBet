@@ -1,0 +1,29 @@
+
+header img {
+  height: 5rem;
+  margin-left: 20px;
+  margin-top: 5px;
+  position: absolute;
+}
+
+main {
+    padding-top: 2rem;
+}
+
+.fb-avatar {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 3.5rem;
+  height: 3.5rem;
+  z-index: 1000;
+
+  opacity: 0.75;
+  transition: all 0.3s ease;
+}
+
+.fb-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

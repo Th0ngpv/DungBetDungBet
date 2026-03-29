@@ -95,6 +95,6 @@
   justify-content: center;
   margin: 0 auto 10px;
   font-weight: bold;
-  color: black;
+  color: var(--text);
   padding: 0 10px;
 }
