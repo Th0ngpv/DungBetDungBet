@@ -1,4 +1,4 @@
-import "./WarningPopup.css";
+import "./warningPopup.css";
 
 type WarningPopupProps = {
   message: string;
