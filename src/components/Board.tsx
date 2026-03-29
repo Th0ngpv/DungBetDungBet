@@ -1,6 +1,22 @@
 import "./board.css";
 import boardImg from "../assets/images/Board.png";
+
+import blueChip from "../assets/images/chip_blue.png";
+import redChip from "../assets/images/chip_red.png";
+import blackChip from "../assets/images/chip_black.png";
+
 import { useState, useEffect } from "react";
+
+type Chip = {
+  value: number;
+  img: string;
+};
+
+const chips: Chip[] = [
+  { value: 200000, img: blueChip },
+  { value: 500000, img: redChip },
+  { value: 1000000, img: blackChip },
+];
 
 type BetZone = {
   id: string;
@@ -13,16 +29,19 @@ type BetZone = {
 type Bet = {
   id: string;
   amount: number;
+  chipImg: string;
 };
 
 type BoardProps = {
   onBetChange: (bets: Bet[]) => void;
+  balance: number;
+  showNotification: (msg: string, type?: "success" | "error" | "info") => void;
   disabled?: boolean;
 };
 
 const zones: BetZone[] = [
   { id: "0", x: 0, y: 2, w: 7, h: 71 },
-  
+
   { id: "1", x: 9, y: 51, w: 6, h: 21 },
   { id: "2", x: 9, y: 27, w: 6, h: 21 },
   { id: "3", x: 9, y: 2, w: 6, h: 21 },
@@ -70,40 +89,76 @@ const zones: BetZone[] = [
   { id: "34", x: 92.5, y: 51, w: 6, h: 21 },
   { id: "35", x: 92.5, y: 27, w: 6, h: 21 },
   { id: "36", x: 92.5, y: 2, w: 6, h: 21 },
-  
-  
+
+
   { id: "even", x: 20, y: 77, w: 14, h: 20 },
   { id: "red", x: 35, y: 77, w: 14, h: 20 },
   { id: "black", x: 50, y: 77, w: 14, h: 20 },
   { id: "odd", x: 65, y: 77, w: 14, h: 20 },
 ];
 
-const Board = ({ onBetChange, disabled }: BoardProps) => {
+const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps) => {
+  const [selectedChip, setSelectedChip] = useState<Chip>(chips[0]);
   const [bets, setBets] = useState<Bet[]>([]);
-  const chipValue = 1000; // default chip
 
 
-const handleClick = (id: string) => {
-  setBets((prev) => {
-    const existing = prev.find((b) => b.id === id);
+  const totalBet = bets.reduce((sum, b) => sum + b.amount, 0);
 
-    if (existing) {
-      return prev.map((b) =>
-        b.id === id ? { ...b, amount: b.amount + chipValue } : b
-      );
-    }
+  const handleClick = (id: string) => {
+    setBets((prev) => {
+      const total = prev.reduce((sum, b) => sum + b.amount, 0);
 
-    return [...prev, { id, amount: chipValue }];
-  });
-};
+      // ❌ Block if exceeding balance
+      if (total + selectedChip.value > balance) {
+        showNotification("Not enough balance!", "error");
+        return prev;
+      }
 
-useEffect(() => {
-  onBetChange(bets);
-}, [bets, onBetChange]);
-  
+      const existing = prev.find((b) => b.id === id);
+
+      if (existing) {
+        return prev.map((b) =>
+          b.id === id
+            ? {
+              ...b,
+              amount: b.amount + selectedChip.value,
+            }
+            : b
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          id,
+          amount: selectedChip.value,
+          chipImg: selectedChip.img,
+        },
+      ];
+    });
+  };
+
+  useEffect(() => {
+    onBetChange(bets);
+  }, [bets, onBetChange]);
+
 
   return (
     <div className="board-wrapper">
+      <div className="bet-info">
+        <span>Total Bet: {(totalBet / 1000000).toFixed(2)}M</span>
+      </div>
+      <div className="chip-selector">
+        {chips.map((chip) => (
+          <img
+            key={chip.value}
+            src={chip.img}
+            className={`chip-option ${selectedChip.value === chip.value ? "active" : ""
+              }`}
+            onClick={() => setSelectedChip(chip)}
+          />
+        ))}
+      </div>
       <div
         className="board"
         style={{ backgroundImage: `url(${boardImg})` }}
@@ -121,12 +176,13 @@ useEffect(() => {
             onClick={() => !disabled && handleClick(z.id)}
           >
             {bets
-            .filter((b) => b.id === z.id)
-            .map((b) => (
-                <div className="chip" key={b.id}>
-                {b.amount / 1000}k
+              .filter((b) => b.id === z.id)
+              .map((b) => (
+                <div key={b.id} className="chip">
+                  <img src={b.chipImg} alt="" />
+                  <span>{`${b.amount / 1000000}`}</span>
                 </div>
-            ))}
+              ))}
           </div>
         ))}
       </div>

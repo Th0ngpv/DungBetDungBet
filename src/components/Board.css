@@ -27,21 +27,74 @@
   transition: 0.2s;
 }
 
-.zone:hover {
-  background: rgba(0, 255, 0, 0.25);
+.zone.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
+/* Chip Selector */
+.chip-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.chip-option {
+  width: 50px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.chip-option:hover {
+  transform: scale(1.1);
+}
+
+.chip-option.active {
+  transform: scale(1.2);
+  outline: 2px solid gold;
+  border-radius: 50%;
+}
+
+/* Chip on board */
 .chip {
   position: absolute;
   top: 50%;
   left: 50%;
+
+  width: clamp(22px, 5vw, 40px); /* 🔥 responsive */
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.chip img {
+  width: 100%;
+}
+
+.chip span {
+  position: absolute;
+  top: 40%;
+  left: 50%;
   transform: translate(-50%, -50%);
 
-  background: gold;
-  color: black;
+  font-size: 1em;
+  color: yellow;
+  text-shadow: 0 0 5px black;
   font-weight: bold;
+}
 
-  border-radius: 50%;
-  padding: 6px 8px;
-  font-size: 10px;
+@media (max-width: 600px) {
+  .chip span {
+    font-size: 0.7em;
+  }
+}
+
+.bet-info {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-weight: bold;
+  color: black;
+  padding: 0 10px;
 }
