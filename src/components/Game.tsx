@@ -202,15 +202,6 @@ const Game = () => {
         balance={balance}
         showNotification={notify} // 🔥 NEW
       />
-
-
-
-      {/* Result */}
-      {lastResult !== null && (
-        <div style={{ marginTop: "20px", fontSize: "20px" }}>
-          🎯 Result: {lastResult} ({getColor(lastResult)})
-        </div>
-      )}
     </div>
   );
 };
