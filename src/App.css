@@ -36,3 +36,14 @@ main {
   height: 100%;
   object-fit: cover;
 }
+
+footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+footer a {
+  color: var(--text-color);
+
+}

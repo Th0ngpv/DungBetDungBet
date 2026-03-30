@@ -20,6 +20,9 @@ function App() {
       {/* footer */}
       <footer>
         <p>© 2026 Ngưng Bet Dừng Bết.</p>
+        <a href="https://thogpv.dev/" target="_blank" rel="noopener noreferrer">
+          Thogpv
+        </a>
       </footer>
       <a
           href="https://www.facebook.com/profile.php?id=61588305654233"

@@ -42,7 +42,7 @@ const WarningPopup = ({ message, loss, win, winningNumber, onClose }: WarningPop
         audio.currentTime = 0;
       }
     };
-  }, []); // Only run once when popup mounts
+  },); // Only run once when popup mounts
 
   return (
     <div className="warning-overlay">
