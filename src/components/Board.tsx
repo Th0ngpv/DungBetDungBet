@@ -13,6 +13,8 @@ type Chip = {
 };
 
 const chips: Chip[] = [
+  { value: 50000, img: redChip },
+  { value: 100000, img: blackChip },
   { value: 200000, img: blueChip },
   { value: 500000, img: redChip },
   { value: 1000000, img: blackChip },
@@ -146,7 +148,7 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
   return (
     <div className="board-wrapper">
       <div className="bet-info">
-        <span>Tiền đã Đặt: {(totalBet / 1000000).toFixed(2)}M</span>
+        <span>Tiền đã Đặt: {(totalBet / 1000000).toFixed(1)}Tr</span>
       </div>
       <div className="chip-selector">
         {chips.map((chip) => (
@@ -162,7 +164,13 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
                 ? "1tr"
                 : chip.value === 500000
                   ? "500"
-                  : "200"}
+                  : chip.value === 200000
+                    ? "200"
+                    : chip.value === 100000
+                      ? "100"
+                      : chip.value === 50000
+                        ? "50"
+                        : chip.value}
             </span>
           </div>
         ))}
@@ -188,7 +196,7 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
               .map((b) => (
                 <div key={b.id} className="chip">
                   <img src={b.chipImg} alt="" />
-                  <span>{`${b.amount / 1000000}`}</span>
+                  <span>{`${b.amount / 1000}k`}</span>
                 </div>
               ))}
           </div>
