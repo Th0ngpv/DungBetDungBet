@@ -8,6 +8,17 @@ import WarningPopup from "./WarningPopup";
 import decoLeft from "../assets/images/deco_left.png";
 import decoRight from "../assets/images/deco_right.png";
 
+import win1 from "../assets/sounds/win1.mp3";
+import win2 from "../assets/sounds/win2.mp3";
+import win3 from "../assets/sounds/win3.mp3";
+
+import lose1 from "../assets/sounds/lose1.mp3";
+import lose2 from "../assets/sounds/lose2.mp3";
+import lose3 from "../assets/sounds/lose3.mp3";
+
+const winningSounds = [win1, win2, win3];
+const losingSounds = [lose1, lose2, lose3];
+
 import "./Game.css";
 
 type Bet = {
@@ -108,7 +119,6 @@ const Game = () => {
     }
 
     setIsSpinning(true);
-
     notify("Đang quay...", "info");
 
     const winningNumber = Math.floor(Math.random() * 37);
@@ -128,6 +138,20 @@ const Game = () => {
       win: win > 0 ? win : 0,
       winningNumber,
     });
+
+    // 🎵 Delayed audio after 6.5 seconds
+    setTimeout(() => {
+      let audio: HTMLAudioElement;
+      if (win > 0) {
+        const randomWin = winningSounds[Math.floor(Math.random() * winningSounds.length)];
+        audio = new Audio(randomWin);
+      } else {
+        const randomLose = losingSounds[Math.floor(Math.random() * losingSounds.length)];
+        audio = new Audio(randomLose);
+      }
+
+      audio.play().catch((err) => console.log("Audio play failed:", err));
+    }, 0);
 
     // 🎉 RESULT NOTIFICATION
     if (win > 0) {
