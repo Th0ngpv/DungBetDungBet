@@ -103,6 +103,14 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
   const [selectedChip, setSelectedChip] = useState<Chip>(chips[0]);
   const [bets, setBets] = useState<Bet[]>([]);
 
+  const undoBet = () => {
+    setBets((prev) => prev.slice(0, -1)); // remove last bet
+  };
+
+  const resetBets = () => {
+    setBets([]); // remove all bets
+  };
+
 
   const totalBet = bets.reduce((sum, b) => sum + b.amount, 0);
 
@@ -148,32 +156,42 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
   return (
     <div className="board-wrapper">
       <div className="bet-info">
-        <span>Tiền đã Đặt: {(totalBet / 1000000).toFixed(1)}Tr</span>
+        <span>Tiền đã Đặt: {(totalBet / 1000)}k</span>
       </div>
-      <div className="chip-selector">
-        {chips.map((chip) => (
-          <div
-            key={chip.value}
-            className={`chip-option ${selectedChip.value === chip.value ? "active" : ""
-              }`}
-            onClick={() => setSelectedChip(chip)}
-          >
-            <img src={chip.img} alt="" />
-            <span className="chip-label">
-              {chip.value === 1000000
-                ? "1tr"
-                : chip.value === 500000
-                  ? "500"
-                  : chip.value === 200000
-                    ? "200"
-                    : chip.value === 100000
-                      ? "100"
-                      : chip.value === 50000
-                        ? "50"
-                        : chip.value}
-            </span>
-          </div>
-        ))}
+      <div className="chip-selector-wrapper">
+        <div className="chip-selector">
+          {chips.map((chip) => (
+            <div
+              key={chip.value}
+              className={`chip-option ${selectedChip.value === chip.value ? "active" : ""}`}
+              onClick={() => setSelectedChip(chip)}
+            >
+              <img src={chip.img} alt="" />
+              <span className="chip-label">
+                {chip.value === 1000000
+                  ? "1tr"
+                  : chip.value === 500000
+                    ? "500"
+                    : chip.value === 200000
+                      ? "200"
+                      : chip.value === 100000
+                        ? "100"
+                        : chip.value === 50000
+                          ? "50"
+                          : chip.value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="chip-action-buttons">
+          <button className="chip-btn" onClick={() => undoBet()} disabled={bets.length === 0 || disabled}>
+            Undo
+          </button>
+          <button className="chip-btn" onClick={() => resetBets()} disabled={bets.length === 0 || disabled}>
+            Reset
+          </button>
+        </div>
       </div>
       <div
         className="board"
@@ -196,7 +214,7 @@ const Board = ({ onBetChange, balance, showNotification, disabled }: BoardProps)
               .map((b) => (
                 <div key={b.id} className="chip">
                   <img src={b.chipImg} alt="" />
-                  <span>{`${b.amount / 1000}k`}</span>
+                  <span>{`${b.amount / 1000}`}</span>
                 </div>
               ))}
           </div>
