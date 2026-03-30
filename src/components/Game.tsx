@@ -155,7 +155,7 @@ const Game = () => {
 
     // 🎉 RESULT NOTIFICATION
     if (win > 0) {
-      notify(`Bạn đã thắng ${(win / 1000000).toFixed(2)}M!`, "success");
+      notify(`Bạn đã thắng ${(win / 1000000).toFixed(1)}Tr!`, "success");
     } else {
       notify("Bạn đã thua !", "error");
     }

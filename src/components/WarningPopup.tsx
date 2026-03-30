@@ -22,13 +22,13 @@ const WarningPopup = ({ message, loss, win, winningNumber, onClose }: WarningPop
 
         {loss !== undefined && loss > 0 && (
           <p style={{ fontWeight: "bold", marginTop: "5px", color: "red", textShadow: "2px 2x 2px darkred" }}>
-            Bạn đã thua: {loss >= 1000000 ? `${(loss / 1000000).toFixed(2)}M` : `${(loss / 1000).toFixed(0)}k`}
+            Bạn đã thua: {loss >= 1000000 ? `${(loss / 1000000).toFixed(1)}Tr` : `${(loss / 1000).toFixed(0)}k`}
           </p>
         )}
 
         {win !== undefined && win > 0 && (
           <p style={{ fontWeight: "bold", marginTop: "5px", color: "green", textShadow: "2px 2x 2px darkred" }}>
-            Mừng ông chủ thắng lớn: {win >= 1000000 ? `${(win / 1000000).toFixed(2)}Tr` : `${(win / 1000).toFixed(0)}k`}
+            Mừng ông chủ thắng lớn: {win >= 1000000 ? `${(win / 1000000).toFixed(1)}Tr` : `${(win / 1000).toFixed(0)}k`}
           </p>
         )}
 
