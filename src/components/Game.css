@@ -1,3 +1,33 @@
+.header-bar {
+  display: flex;
+  align-items: center;          /* vertically center items */
+  justify-content: space-between; /* left spacer + center title + right balance */
+  width: 100%;                  /* full width */
+  padding: 10px 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute;           /* center independent of left/right */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.header-balance {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.header-spacer {
+  width: 100px; /* optional: ensures right balance doesn't overlap title */
+}
+
 .spin-container {
   display: flex;
   align-items: center;

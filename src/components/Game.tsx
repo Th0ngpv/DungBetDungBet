@@ -188,10 +188,14 @@ const Game = () => {
         />
       )}
 
-      {/* Balance */}
-      <h2>
-        Tiền Vốn: {balance >= 1000000 ? `${balance / 1000000}tr` : `${balance / 1000}k`}
-      </h2>
+      {/* Header with title and balance */}
+      <div className="header-bar">
+        <div className="header-spacer"></div>  {/* empty left space */}
+        <div className="header-title">Loay hoay Xoay roulette</div>
+        <div className="header-balance">
+          Tiền Vốn: {balance >= 1000000 ? `${balance / 1000000}tr` : `${balance / 1000}k`}
+        </div>
+      </div>
 
 
 
