@@ -128,10 +128,18 @@ const Game = () => {
     setBalance((prev) => prev - totalBet + win);
 
     // always show popup with full info
-    const randomWarning = warnings[Math.floor(Math.random() * warnings.length)];
+    let popupMessage = "";
+
+    // 👉 if WIN → custom message
+    if (win > 0) {
+      popupMessage = "bạn chắc chưa?";
+    } else {
+      // 👉 if LOSE → keep random warning
+      popupMessage = warnings[Math.floor(Math.random() * warnings.length)];
+    }
 
     setWarningPopup({
-      message: randomWarning,
+      message: popupMessage,
       loss: totalBet > win ? totalBet - win : 0,
       win: win > 0 ? win : 0,
       winningNumber,
