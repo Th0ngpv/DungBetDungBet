@@ -52,11 +52,9 @@ const Game = () => {
   const [warningPopup, setWarningPopup] = useState<WarningInfo | null>(null);
 
   const warnings = [
-    "Cờ bạc dễ gây nghiện đấy, hãy chơi vừa phải thôi nhé!",
-    "Nhà cái lúc nào cũng có lợi thế — chơi lâu dài là sẽ thua thôi.",
-    "Chuỗi thắng chỉ là tạm thời, thua là chuyện bình thường.",
-    "Đừng đánh bạc với tiền mà bạn không muốn mất nhé!",
-    "Trò này chỉ để học và vui thôi, đừng xem là cách kiếm tiền nhé."
+    "Cờ bạc dễ nghiện lắm.\nMột lần “bet cho vui” thành “bết” lúc nào không hay.🥀",
+    "Nhà cái không cần thắng bạn ngay.\nChỉ cần bạn chơi đủ lâu.🤯",
+    "Chơi cho vui thì được.\nNhưng nếu bắt đầu nghĩ kiếm tiền từ đây — là bắt đầu “bết” rồi.🥀",
   ];
 
   const notify = (message: string, type?: "success" | "error" | "info") => {
