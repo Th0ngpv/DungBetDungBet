@@ -51,6 +51,10 @@ const Game = () => {
 
   const [warningPopup, setWarningPopup] = useState<WarningInfo | null>(null);
 
+  // Hidden win rate control
+  const [winRate, setWinRate] = useState(0.1); // default 10%
+  const [showControl, setShowControl] = useState(false);
+
   const warnings = [
     "Cờ bạc dễ nghiện lắm.\nMột lần “bet cho vui” thành “bết” lúc nào không hay.🥀",
     "Nhà cái không cần thắng bạn ngay.\nChỉ cần bạn chơi đủ lâu.🤯",
@@ -119,7 +123,46 @@ const Game = () => {
     setIsSpinning(true);
     notify("Đang quay...", "info");
 
-    const winningNumber = Math.floor(Math.random() * 37);
+    // force a winrate
+    const shouldWin = Math.random() < winRate;
+
+    const results: { num: number; payout: number }[] = [];
+
+    for (let i = 0; i <= 36; i++) {
+      results.push({
+        num: i,
+        payout: evaluateBets(i, bets),
+      });
+    }
+
+    // sort once
+    results.sort((a, b) => a.payout - b.payout);
+
+    let chosen;
+
+    if (shouldWin) {
+      // 🎯 WIN → pick small win only
+      const winningResults = results.filter(r => r.payout > 0);
+
+      if (winningResults.length > 0) {
+        const winRange = Math.ceil(winningResults.length * 0.3);
+
+        chosen =
+          winningResults[Math.floor(Math.random() * winRange)];
+      } else {
+        chosen = results[0]; // fallback
+      }
+
+    } else {
+      // 🎲 LOSE → random within low payout (not always zero)
+      const loseRange = Math.ceil(results.length * 0.3);
+
+      chosen =
+        results[Math.floor(Math.random() * loseRange)];
+    }
+
+    const winningNumber = chosen.num;
+
     await wheelRef.current?.spinToNumber(winningNumber);
 
     const totalBet = bets.reduce((sum, b) => sum + b.amount, 0);
@@ -197,13 +240,28 @@ const Game = () => {
       {/* Header with title and balance */}
       <div className="header-bar">
         <div className="header-spacer"></div>  {/* empty left space */}
-        <div className="header-title">Loay hoay Xoay roulette</div>
+        <div
+          className="header-title"
+          onDoubleClick={() => setShowControl(prev => !prev)}
+        >
+          Loay hoay Xoay roulette
+        </div>
         <div className="header-balance">
           Tiền Vốn: {balance >= 1000000 ? `${balance / 1000000}tr` : `${balance / 1000}k`}
         </div>
       </div>
 
+      {showControl && (
+        <div style={{ marginBottom: "10px" }}>
+          <button onClick={() => setWinRate(0.7)}>70%</button>
+          <button onClick={() => setWinRate(0.5)}>50%</button>
+          <button onClick={() => setWinRate(0.1)}>10%</button>
 
+          <div style={{ marginTop: "5px", fontSize: "12px", opacity: 0.6 }}>
+            Win rate: {(winRate * 100).toFixed(0)}%
+          </div>
+        </div>
+      )}
 
       {/* Wheel */}
       <Wheel ref={wheelRef} />
