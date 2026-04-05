@@ -40,7 +40,9 @@ const Game = () => {
   const [round, setRound] = useState(0);
 
   const [bets, setBets] = useState<Bet[]>([]);
+
   const [balance, setBalance] = useState(5000000);
+  const [editBalance, setEditBalance] = useState("");
 
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -61,10 +63,22 @@ const Game = () => {
     "Chơi cho vui thì được.\nNhưng nếu bắt đầu nghĩ kiếm tiền từ đây — là bắt đầu “bết” rồi.🥀",
   ];
 
+  const applyBalanceEdit = () => {
+    const value = Number(editBalance);
+
+    if (isNaN(value)) {
+      notify("Giá trị không hợp lệ", "error");
+      return;
+    }
+
+    setBalance(value);
+    setEditBalance("");
+    notify("Đã cập nhật tiền!", "success");
+  };
+
   const notify = (message: string, type?: "success" | "error" | "info") => {
     setNotification({ message, type });
   };
-
 
   const evaluateBets = (winningNumber: number, bets: Bet[]) => {
     let totalWin = 0;
@@ -248,6 +262,32 @@ const Game = () => {
         </div>
         <div className="header-balance">
           Tiền Vốn: {balance >= 1000000 ? `${balance / 1000000}tr` : `${balance / 1000}k`}
+
+          {showControl && (
+            <div style={{ marginTop: "6px" }}>
+              <input
+                type="number"
+                placeholder="Set balance..."
+                value={editBalance}
+                onChange={(e) => setEditBalance(e.target.value)}
+                style={{
+                  width: "120px",
+                  padding: "4px",
+                  fontSize: "12px",
+                }}
+              />
+              <button
+                onClick={applyBalanceEdit}
+                style={{
+                  marginLeft: "5px",
+                  fontSize: "12px",
+                  padding: "4px 6px",
+                }}
+              >
+                Set
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
